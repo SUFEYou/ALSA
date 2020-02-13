@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>320</width>
+     <height>240</height>
+    </rect>
+   </property>
+   <property name="tabPosition">
+    <enum>QTabWidget::West</enum>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Tab 1</string>
+    </attribute>
+    <widget class="QComboBox" name="comboBox">
+     <property name="geometry">
+      <rect>
+       <x>75</x>
+       <y>22</y>
+       <width>85</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>4</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>67</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Number:</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>261</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Control</string>
+     </property>
+     <widget class="QLineEdit" name="Control_IP">
+      <property name="geometry">
+       <rect>
+        <x>45</x>
+        <y>20</y>
+        <width>170</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>000.000.000.000</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>20</y>
+        <width>35</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>IP:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="Control_Port">
+      <property name="geometry">
+       <rect>
+        <x>45</x>
+        <y>50</y>
+        <width>170</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>50</y>
+        <width>35</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Port:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>261</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Voice</string>
+     </property>
+     <widget class="QLineEdit" name="Voice_IP">
+      <property name="geometry">
+       <rect>
+        <x>45</x>
+        <y>20</y>
+        <width>170</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>000.000.000.000</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>20</y>
+        <width>35</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>IP:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="Voice_Port">
+      <property name="geometry">
+       <rect>
+        <x>45</x>
+        <y>50</y>
+        <width>170</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>50</y>
+        <width>35</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Port:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Tab 2</string>
+    </attribute>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
