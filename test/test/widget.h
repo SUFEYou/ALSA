@@ -2,10 +2,13 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <vector>
 
 namespace Ui {
 class Widget;
 }
+
+class RadioControl;
 
 class Widget : public QWidget
 {
@@ -18,7 +21,8 @@ public:
 private slots:
 
 private:
-    Ui::Widget *ui;
+    Ui::Widget                      *ui;
+    std::vector<RadioControl*>      m_RadioControl;
 };
 
 #endif // WIDGET_H
