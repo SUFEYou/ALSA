@@ -21,7 +21,7 @@ void AudioCapture::run()
         rc = snd_pcm_readi(m_handle, a, m_frameSize);
         if (rc == -EPIPE)
         {
-              /* EPIPE means underrun */
+              /* EPIPE means overrun */
               qDebug() << "overrun occurred";
               snd_pcm_prepare(m_handle);
         }
@@ -34,7 +34,7 @@ void AudioCapture::run()
             qDebug() << "short read, read " << rc << "frames";
         }
         qDebug() << "read " << rc << "frames";
-        AudioControl::getInstance()->addDataToList(a, rc*4);
+        AudioControl::getInstance()->addToCaptureDataList(a, rc*4);
     }
     m_stop = false;
 }

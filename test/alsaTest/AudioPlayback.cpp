@@ -18,10 +18,10 @@ void AudioPlayback::run()
     while (!m_stop)
     {
         memset(a, 0, sizeof(a));
-        AudioControl::getInstance()->popDataFromList(a, rc);
+        AudioControl::getInstance()->popFromPlaybackDataList(a, rc);
         if (rc <= 0)
         {
-            qDebug() << "Do Not Have Enough Data To Play!";
+            //qDebug() << "Do Not Have Enough Data To Play!";
             continue;
         }
         else if ((rc%m_frameSize) != 0)
@@ -44,6 +44,7 @@ void AudioPlayback::run()
         {
             qDebug() << "short write, write " << rc << "frames";
         }
+        qDebug() << "write " << rc << "frames";
     }
     m_stop = false;
 }

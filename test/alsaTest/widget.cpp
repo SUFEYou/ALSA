@@ -10,11 +10,22 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
     QString status;
-    AudioControl::getInstance()->audioControlInit(status);
+    if (AudioControl::getInstance()->audioControlInit(status))
+        AudioControl::getInstance()->start();
     qDebug() << status;
 }
 
 Widget::~Widget()
 {
     delete ui;
+}
+
+void Widget::on_up_clicked()
+{
+    AudioControl::getInstance()->up();
+}
+
+void Widget::on_down_clicked()
+{
+    AudioControl::getInstance()->down();
 }

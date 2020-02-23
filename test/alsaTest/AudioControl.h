@@ -1,42 +1,59 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
 
-#include <QObject>
+#include <QThread>
 #include <QMutex>
 #include <QList>
+#include <QMap>
 
 class AudioCapture;
 class AudioPlayback;
-class QTimer;
+class SoundMixer;
 
 typedef struct AUDIOPERIODDATA {
     char        data[4096];
     unsigned    dataLen;
 } AudioPeriodData;
 
-class AudioControl : public QObject
+class AudioControl : public QThread
 {
     Q_OBJECT
 public:
     static AudioControl* getInstance();
     bool audioControlInit(QString& status);
-    void addDataToList(const char *data, const unsigned int len);
-    void popDataFromList(char *data, int &len);
+    void addToCaptureDataList(const char *data, const unsigned int len);
+    void popFromCaptureDataList(char *data, int &len);
+    void addToPlaybackDataList(const char *data, const unsigned int len);
+    void popFromPlaybackDataList(char *data, int &len);
+    void up();
+    void down();
+
+protected:
+    virtual void run();
 
 private:
-    AudioControl(QObject *parent=NULL);
+    AudioControl();
+    void dealCaptureData();
+    void dealPlaybackData();
+
+signals:
+
 
 private slots:
-    void test();
 
 private:
-    static AudioControl     *m_instance;
-    static QMutex           m_getMutex;
-    AudioCapture            *m_audioCapture;
-    AudioPlayback           *m_audioPlayback;
-    QTimer                  *m_testTimer;
-    QList<AudioPeriodData*>  m_audioDataList;
-    QMutex                  m_dataMutex;
+    static AudioControl                     *m_instance;
+    static QMutex                           m_getMutex;
+    bool                                    m_stop;
+    AudioCapture                            *m_audioCapture;
+    AudioPlayback                           *m_audioPlayback;
+    QList<AudioPeriodData*>                 m_captureDataList;
+    QMutex                                  m_captureDataMutex;
+    QList<AudioPeriodData*>                 m_playbackDataList;
+    QMutex                                  m_playbackDataMutex;
+    QMap<uint8_t,QList<AudioPeriodData*>*>  m_DataMixer;
+
+    SoundMixer                              *m_soundMixer;
 };
 
 #endif // AUDIOCONTROL_H
