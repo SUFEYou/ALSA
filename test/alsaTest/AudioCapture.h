@@ -10,6 +10,7 @@ class AudioCapture: public QThread
 public:
     AudioCapture();
     bool audioCaptureInit(QString& status);
+    inline unsigned int getFrameSize() { return m_frameSize; }
 
 protected:
     virtual void run();

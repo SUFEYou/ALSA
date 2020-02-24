@@ -5,13 +5,16 @@
 #include <QMutex>
 #include <QList>
 #include <QMap>
+#include <QSharedPointer>
 
 class AudioCapture;
 class AudioPlayback;
 class SoundMixer;
 
+#define DATAMAXSIZE 4096
+
 typedef struct AUDIOPERIODDATA {
-    char        data[4096];
+    char        data[DATAMAXSIZE];
     unsigned    dataLen;
 } AudioPeriodData;
 
@@ -25,6 +28,7 @@ public:
     void popFromCaptureDataList(char *data, int &len);
     void addToPlaybackDataList(const char *data, const unsigned int len);
     void popFromPlaybackDataList(char *data, int &len);
+    void addToMixerData(const uint8_t id, const char *data, const unsigned int len);
     void up();
     void down();
 
@@ -51,7 +55,7 @@ private:
     QMutex                                  m_captureDataMutex;
     QList<AudioPeriodData*>                 m_playbackDataList;
     QMutex                                  m_playbackDataMutex;
-    QMap<uint8_t,QList<AudioPeriodData*>*>  m_DataMixer;
+    QMap<uint8_t,QList<AudioPeriodData*>*>  m_mixerData;
 
     SoundMixer                              *m_soundMixer;
 };

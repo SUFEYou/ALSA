@@ -92,9 +92,9 @@ bool SoundMixer::soundMixerInit(QString& status)
 
 void SoundMixer::up()
 {
-    m_val += 2;
-    if (m_val >= 63)
-    m_val = 63;
+    m_val += 1;
+    if (m_val >= 31)
+    m_val = 31;
     //判断是不是单声道
     if( snd_mixer_selem_is_playback_mono(m_elem) )
     {
@@ -113,7 +113,7 @@ void SoundMixer::up()
 }
 void SoundMixer::down()
 {
-    m_val -= 2;
+    m_val -= 1;
     if (m_val <= 0)
     m_val = 0;
     //判断是不是单声道

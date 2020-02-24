@@ -138,11 +138,10 @@ void AudioControl::dealCaptureData()
     {
         AudioPeriodData* tmp = m_captureDataList.front();
         m_captureDataList.pop_front();
-        char a[4096];
-        unsigned int len = 0;
-        len = tmp->dataLen;
-        memcpy(a, tmp->data, len);
-        addToPlaybackDataList(a, len);
+        //addToPlaybackDataList(tmp->data, tmp->dataLen);
+        addToMixerData(1, tmp->data, tmp->dataLen);
+        addToMixerData(2, tmp->data, tmp->dataLen);
+        addToMixerData(3, tmp->data, tmp->dataLen);
         delete tmp;
         tmp = NULL;
     }
@@ -150,13 +149,95 @@ void AudioControl::dealCaptureData()
 
 void AudioControl::dealPlaybackData()
 {
+    QList<AudioPeriodData*> data;
+    data.clear();
+    for(QMap<uint8_t,QList<AudioPeriodData*>*>::iterator iter = m_mixerData.begin(); iter != m_mixerData.end(); ++iter)
+    {
+        QList<AudioPeriodData*>* tmpList = iter.value();
+        if (!tmpList->isEmpty())
+        {
+            AudioPeriodData* tmpData = tmpList->front();
+            tmpList->pop_front();
+            data.append(tmpData);
+        }
+        else
+        {
+            m_mixerData.erase(iter);
+            delete tmpList;
+            tmpList = NULL;
+        }
+    }
+    if (data.count() > 0)
+    {
+        //归一化混音
+        int const MAX=32767;
+        int const MIN=-32768;
 
+        double f = 1;
+        qint32 output;
+        AudioPeriodData mixerData;
+        memset(&mixerData, 0, sizeof(mixerData));
+        int x = 2 * m_audioCapture->getFrameSize();
+        for (int i = 0; i < x; ++i)
+        {
+           qint32 temp = 0;
+           for (int j = 0; j < data.size(); ++j)
+           {
+               temp += *(qint16*)(&(data[j]->data[i*2]));
+           }
+           output = (qint32)(temp*f);
+           if (output > MAX)
+           {
+              f = (double)MAX/(double)(output);
+              output=MAX;
+           }
+           if (output < MIN)
+           {
+              f = (double)MIN/(double)(output);
+              output = MIN;
+           }
+           if (f < 1)
+           {
+              f += ((double)1-f)/(double)32;
+           }
+           *(qint16*)(&(mixerData.data[i*2])) = (qint16)output;
+           mixerData.dataLen += 2;
+        }
+        addToPlaybackDataList(mixerData.data, mixerData.dataLen);
+    }
+
+    for (int i = 0; i < data.size(); ++i)
+    {
+        AudioPeriodData* tmp = data.front();
+        data.pop_front();
+        delete tmp;
+        tmp = NULL;
+    }
+}
+
+void AudioControl::addToMixerData(const uint8_t id, const char *data, const unsigned int len)
+{
+    QMap<uint8_t,QList<AudioPeriodData*>*>::const_iterator iter = m_mixerData.find(id);
+    if (iter == m_mixerData.constEnd())
+    {
+        QList<AudioPeriodData*>* tmp = new QList<AudioPeriodData*>;
+        m_mixerData.insert(id, tmp);
+    }
+    QList<AudioPeriodData*>* list = m_mixerData.value(id);
+    if (len > 0)
+    {
+        AudioPeriodData* d = new AudioPeriodData;
+        memcpy(d->data, data, len);
+        d->dataLen = len;
+        list->append(d);
+    }
 }
 
 void AudioControl::up()
 {
     m_soundMixer->up();
 }
+
 void AudioControl::down()
 {
     m_soundMixer->down();

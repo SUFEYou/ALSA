@@ -57,6 +57,8 @@ bool AudioCapture::audioCaptureInit(QString& status)
     //设置双声道，小端格式，16位
     snd_pcm_hw_params_set_format(m_handle, m_params, SND_PCM_FORMAT_S16_LE);
     snd_pcm_hw_params_set_channels(m_handle, m_params, 2);
+    //snd_pcm_hw_params_set_format(m_handle, m_params, SND_PCM_FORMAT_S8);
+    //snd_pcm_hw_params_set_channels(m_handle, m_params, 1);
     //设置采样率（44100标准MP3采样频率）
     unsigned int val = 44100;
     snd_pcm_hw_params_set_rate_near(m_handle, m_params, &val, 0);
