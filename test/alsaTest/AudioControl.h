@@ -14,7 +14,7 @@ class AudioCapture;
 class AudioPlayback;
 class SoundMixer;
 
-#define DATAMAXSIZE 4096
+#define DATAMAXSIZE 512
 
 typedef struct AUDIOPERIODDATA {
     char        data[DATAMAXSIZE];
@@ -51,12 +51,6 @@ private:
     void dealCaptureData();
     void dealPlaybackData();
 
-    void encoder(const char *data, const unsigned int len);
-    void decoder(uint8_t bitStream[], uint8_t bitStreamLength);
-
-    void parametersBitStream2Array(uint8_t bitStream[], uint16_t parameters[]);
-    void parametersArray2BitStream(uint16_t parameters[], uint8_t bitStream[]);
-
 signals:
 
 
@@ -73,10 +67,9 @@ private:
     AudioPeriodDataList                     m_playbackDataList;
     QMutex                                  m_playbackDataMutex;
     SoundMixerMap                           m_mixerData;
+    QMutex                                  m_mixerDataMutex;
 
     SoundMixer                              *m_soundMixer;
-    bcg729EncoderChannelContextStruct       *m_encoderChannelContextStruct;
-    bcg729DecoderChannelContextStruct       *m_decoderChannelContextStruct;
 };
 
 #endif // AUDIOCONTROL_H

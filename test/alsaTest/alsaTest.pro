@@ -13,14 +13,14 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -fpermissive
 
-#INCLUDEPATH += /root/test/OpenSource/install/include
-#LIBS += -L/lib/x86_64-linux-gnu -lasound -ldl -lm
-#LIBS += -L/root/test/OpenSource/install/lib -lbcg729
+INCLUDEPATH += /root/test/OpenSource/install/include
+LIBS += -L/lib/x86_64-linux-gnu -lasound -ldl -lm
+LIBS += -L/root/test/OpenSource/install/lib -lbcg729
 
-INCLUDEPATH += /usr/local/arm/alsa/include
-INCLUDEPATH += /usr/local/arm/bcg729/include
-LIBS += -L/usr/local/arm/alsa/lib -lasound
-LIBS += -L/usr/local/arm/bcg729/lib -lbcg729
+#INCLUDEPATH += /usr/local/arm/alsa/include
+#INCLUDEPATH += /usr/local/arm/bcg729/include
+#LIBS += -L/usr/local/arm/alsa/lib -lasound
+#LIBS += -L/usr/local/arm/bcg729/lib -lbcg729
 
 
 SOURCES += main.cpp\
@@ -28,12 +28,18 @@ SOURCES += main.cpp\
     AudioControl.cpp \
     AudioPlayback.cpp \
     AudioCapture.cpp \
-    SoundMixer.cpp
+    SoundMixer.cpp \
+    G729Encoder.cpp \
+    G729Common.cpp \
+    G729Decoder.cpp
 
 HEADERS  += widget.h \
     AudioControl.h \
     AudioPlayback.h \
     AudioCapture.h \
-    SoundMixer.h
+    SoundMixer.h \
+    G729Encoder.h \
+    G729Common.h \
+    G729Decoder.h
 
 FORMS    += widget.ui
