@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -fpermissive -g -std=gnu++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../alsaTest -I. -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. -I. -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../alsaTest -I. -I../../../OpenSource/install/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. -I. -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /opt/Qt5.6.3/5.6.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = alsaTest1.0.0
 DISTDIR = /root/test/workspace/test/build-alsaTest-Desktop_Qt_5_6_3_GCC_64bit-Debug/.tmp/alsaTest1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/opt/Qt5.6.3/5.6.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/lib/x86_64-linux-gnu -lasound -ldl -lm -L/opt/Qt5.6.3/5.6.3/gcc_64/lib -lQt5Widgets -L/usr/lib64 -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/lib/x86_64-linux-gnu -lasound -ldl -lm -L/root/test/OpenSource/install/lib -lbcg729 -L/opt/Qt5.6.3/5.6.3/gcc_64/lib -lQt5Widgets -L/usr/lib64 -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -552,7 +552,7 @@ moc_widget.cpp: /opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets/QWidget \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui/qvector2d.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui/qtouchdevice.h \
 		../alsaTest/widget.h
-	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/widget.h -o moc_widget.cpp
+	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/root/test/OpenSource/install/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/widget.h -o moc_widget.cpp
 
 moc_AudioControl.cpp: /opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QThread \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qthread.h \
@@ -625,8 +625,13 @@ moc_AudioControl.cpp: /opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QThread \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qpoint.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qset.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QSharedPointer \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../OpenSource/install/include/bcg729/encoder.h \
+		../../../OpenSource/install/include/bcg729/decoder.h \
 		../alsaTest/AudioControl.h
-	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/AudioControl.h -o moc_AudioControl.cpp
+	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/root/test/OpenSource/install/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/AudioControl.h -o moc_AudioControl.cpp
 
 moc_AudioPlayback.cpp: /opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QThread \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qthread.h \
@@ -685,7 +690,7 @@ moc_AudioPlayback.cpp: /opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QThread \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qobject_impl.h \
 		../alsaTest/AudioPlayback.h
-	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/AudioPlayback.h -o moc_AudioPlayback.cpp
+	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/root/test/OpenSource/install/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/AudioPlayback.h -o moc_AudioPlayback.cpp
 
 moc_AudioCapture.cpp: /opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QThread \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qthread.h \
@@ -744,7 +749,7 @@ moc_AudioCapture.cpp: /opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QThread \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qobject_impl.h \
 		../alsaTest/AudioCapture.h
-	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/AudioCapture.h -o moc_AudioCapture.cpp
+	/opt/Qt5.6.3/5.6.3/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++ -I/root/test/workspace/test/alsaTest -I/root/test/OpenSource/install/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtWidgets -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtGui -I/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. ../alsaTest/AudioCapture.h -o moc_AudioCapture.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1025,6 +1030,9 @@ widget.o: ../alsaTest/widget.cpp ../alsaTest/widget.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QMutex \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QList \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QMap \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QSharedPointer \
+		../../../OpenSource/install/include/bcg729/encoder.h \
+		../../../OpenSource/install/include/bcg729/decoder.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o widget.o ../alsaTest/widget.cpp
 
@@ -1100,6 +1108,11 @@ AudioControl.o: ../alsaTest/AudioControl.cpp ../alsaTest/AudioControl.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qpoint.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qset.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QSharedPointer \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../OpenSource/install/include/bcg729/encoder.h \
+		../../../OpenSource/install/include/bcg729/decoder.h \
 		../alsaTest/AudioCapture.h \
 		../alsaTest/AudioPlayback.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QMutexLocker \
@@ -1181,6 +1194,11 @@ AudioPlayback.o: ../alsaTest/AudioPlayback.cpp ../alsaTest/AudioPlayback.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qpoint.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qset.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QSharedPointer \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../OpenSource/install/include/bcg729/encoder.h \
+		../../../OpenSource/install/include/bcg729/decoder.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AudioPlayback.o ../alsaTest/AudioPlayback.cpp
 
@@ -1257,6 +1275,11 @@ AudioCapture.o: ../alsaTest/AudioCapture.cpp ../alsaTest/AudioCapture.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qpoint.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qset.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QSharedPointer \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../OpenSource/install/include/bcg729/encoder.h \
+		../../../OpenSource/install/include/bcg729/decoder.h \
 		/opt/Qt5.6.3/5.6.3/gcc_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AudioCapture.o ../alsaTest/AudioCapture.cpp
 

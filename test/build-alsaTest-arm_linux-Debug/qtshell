@@ -34,9 +34,9 @@ export TSLIB_PLUGINDIR=$TSLIB_ROOT/lib/ts
 export TSLIB_CONSOLEDEVICE=none
 export TSLIB_FBDEVICE=/dev/fb0
 export QTDIR=/opt/qt-4.7.1/
+export BCG729DIR=/usr/local/arm/bcg729
 
-
-export LD_LIBRARY_PATH=$QTDIR/plugins/qtopialmigrate/:$QTDIR/qt_plugins/imageformats/:$QTDIR/lib:/root/tslib/build/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$QTDIR/plugins/qtopialmigrate/:$QTDIR/qt_plugins/imageformats/:$QTDIR/lib:/root/tslib/build/lib:$BCG729DIR/lib:$LD_LIBRARY_PATH
 export PATH=/bin:/sbin:/usr/bin/:/usr/sbin:/root/tslib/build/bin
 
 

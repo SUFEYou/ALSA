@@ -6,7 +6,7 @@ AudioCapture::AudioCapture()
              : m_stop(false)
              , m_handle(NULL)
              , m_params(NULL)
-             , m_frameSize(0)
+             , m_frameSize(80)
 {
 
 }
@@ -34,7 +34,7 @@ void AudioCapture::run()
             qDebug() << "short read, read " << rc << "frames";
         }
         qDebug() << "read " << rc << "frames";
-        AudioControl::getInstance()->addToCaptureDataList(a, rc*4);
+        AudioControl::getInstance()->addToCaptureDataList(a, rc*2);
     }
     m_stop = false;
 }
@@ -56,14 +56,18 @@ bool AudioCapture::audioCaptureInit(QString& status)
     snd_pcm_hw_params_set_access(m_handle, m_params, SND_PCM_ACCESS_RW_INTERLEAVED);
     //设置双声道，小端格式，16位
     snd_pcm_hw_params_set_format(m_handle, m_params, SND_PCM_FORMAT_S16_LE);
-    snd_pcm_hw_params_set_channels(m_handle, m_params, 2);
+    //snd_pcm_hw_params_set_channels(m_handle, m_params, 2);
+    snd_pcm_hw_params_set_channels(m_handle, m_params, 1);
     //snd_pcm_hw_params_set_format(m_handle, m_params, SND_PCM_FORMAT_S8);
     //snd_pcm_hw_params_set_channels(m_handle, m_params, 1);
     //设置采样率（44100标准MP3采样频率）
-    unsigned int val = 44100;
-    snd_pcm_hw_params_set_rate_near(m_handle, m_params, &val, 0);
+    //unsigned int val = 44100;
+    unsigned int val = 8000;
+    //snd_pcm_hw_params_set_rate_near(m_handle, m_params, &val, 0);
+    snd_pcm_hw_params_set_rate(m_handle, m_params, val, 0);
     //设在采样周期,（最好是让系统自动设置，这一步可以省略）
     //snd_pcm_hw_params_set_period_size_near(m_handle, m_params, (snd_pcm_uframes_t*)&m_frameSize, 0);
+    snd_pcm_hw_params_set_period_size(m_handle, m_params, m_frameSize, 0);
     //设置好的参数回写设备
     r = snd_pcm_hw_params(m_handle, m_params);
     if(r < 0)
@@ -73,7 +77,7 @@ bool AudioCapture::audioCaptureInit(QString& status)
     }
     //16--2--（一帧数据4个字节）
     //获取一个周期有多少帧数据，一个周期一个周期方式处理音频数据。
-    snd_pcm_hw_params_get_period_size(m_params, (snd_pcm_uframes_t*)&m_frameSize,0);
+    //snd_pcm_hw_params_get_period_size(m_params, (snd_pcm_uframes_t*)&m_frameSize,0);
     //unsigned char *buffer = malloc(4*frames);//由于双通道，16bit，每个通道2个字节，一个周期所需要的空间为4个字节*帧数
     status = QString("snd pcm open succeed");
     return true;

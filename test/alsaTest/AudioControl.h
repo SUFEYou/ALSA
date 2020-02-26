@@ -7,6 +7,9 @@
 #include <QMap>
 #include <QSharedPointer>
 
+#include "bcg729/encoder.h"
+#include "bcg729/decoder.h"
+
 class AudioCapture;
 class AudioPlayback;
 class SoundMixer;
@@ -17,6 +20,13 @@ typedef struct AUDIOPERIODDATA {
     char        data[DATAMAXSIZE];
     unsigned    dataLen;
 } AudioPeriodData;
+
+typedef QSharedPointer<AudioPeriodData>         pAudioPeriodData;
+typedef QList<pAudioPeriodData>                 AudioPeriodDataList;
+typedef QSharedPointer<AudioPeriodDataList>     pAudioPeriodDataList;
+typedef QMap<uint8_t, pAudioPeriodDataList>     SoundMixerMap;
+
+
 
 class AudioControl : public QThread
 {
@@ -37,8 +47,15 @@ protected:
 
 private:
     AudioControl();
+    ~AudioControl();
     void dealCaptureData();
     void dealPlaybackData();
+
+    void encoder(const char *data, const unsigned int len);
+    void decoder(uint8_t bitStream[], uint8_t bitStreamLength);
+
+    void parametersBitStream2Array(uint8_t bitStream[], uint16_t parameters[]);
+    void parametersArray2BitStream(uint16_t parameters[], uint8_t bitStream[]);
 
 signals:
 
@@ -51,13 +68,15 @@ private:
     bool                                    m_stop;
     AudioCapture                            *m_audioCapture;
     AudioPlayback                           *m_audioPlayback;
-    QList<AudioPeriodData*>                 m_captureDataList;
+    AudioPeriodDataList                     m_captureDataList;
     QMutex                                  m_captureDataMutex;
-    QList<AudioPeriodData*>                 m_playbackDataList;
+    AudioPeriodDataList                     m_playbackDataList;
     QMutex                                  m_playbackDataMutex;
-    QMap<uint8_t,QList<AudioPeriodData*>*>  m_mixerData;
+    SoundMixerMap                           m_mixerData;
 
     SoundMixer                              *m_soundMixer;
+    bcg729EncoderChannelContextStruct       *m_encoderChannelContextStruct;
+    bcg729DecoderChannelContextStruct       *m_decoderChannelContextStruct;
 };
 
 #endif // AUDIOCONTROL_H

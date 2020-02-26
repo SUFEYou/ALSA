@@ -13,11 +13,14 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -fpermissive
 
+#INCLUDEPATH += /root/test/OpenSource/install/include
 #LIBS += -L/lib/x86_64-linux-gnu -lasound -ldl -lm
+#LIBS += -L/root/test/OpenSource/install/lib -lbcg729
 
 INCLUDEPATH += /usr/local/arm/alsa/include
+INCLUDEPATH += /usr/local/arm/bcg729/include
 LIBS += -L/usr/local/arm/alsa/lib -lasound
-#LIBS += -L/usr/local/arm/4.3.2/arm-none-linux-gnueabi/libc/usr/lib -ldl -lm
+LIBS += -L/usr/local/arm/bcg729/lib -lbcg729
 
 
 SOURCES += main.cpp\
