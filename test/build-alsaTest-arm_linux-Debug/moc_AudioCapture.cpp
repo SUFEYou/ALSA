@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'AudioCapture.h'
 **
-** Created: Thu Feb 27 13:57:51 2020
+** Created: Thu Feb 27 16:46:47 2020
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!

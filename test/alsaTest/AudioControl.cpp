@@ -259,7 +259,7 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     if (bitStreamLength == 10)
     {
         //qDebug() << "bitStreamLength == 10";
-        decoder(bitStream, bitStreamLength);
+        //decoder(bitStream, bitStreamLength);
         emit sendCaptureData(bitStream, bitStreamLength);
     }
     else if (bitStreamLength == 2)

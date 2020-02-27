@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'SocketControl.h'
 **
-** Created: Thu Feb 27 13:57:52 2020
+** Created: Thu Feb 27 16:46:47 2020
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_SocketControl[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,18 +32,26 @@ static const uint qt_meta_data_SocketControl[] = {
 
  // slots: signature, parameters, type, tag, flags
       24,   15,   14,   14, 0x0a,
-      51,   14,   14,   14, 0x08,
-      74,   62,   14,   14, 0x08,
-     110,   14,   14,   14, 0x08,
+      51,   14,   14,   14, 0x0a,
+      68,   14,   14,   14, 0x08,
+      91,   79,   14,   14, 0x08,
+     127,   14,   14,   14, 0x08,
+     139,   14,   14,   14, 0x08,
+     151,   14,   14,   14, 0x08,
+     170,  166,   14,   14, 0x08,
+     213,   14,   14,   14, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_SocketControl[] = {
     "SocketControl\0\0data,len\0"
-    "sendData(const char*,uint)\0readData()\0"
-    "socketError\0error(QAbstractSocket::SocketError)\0"
-    "dealTimer()\0"
+    "sendData(const char*,uint)\0tcpClientStart()\0"
+    "readData()\0socketError\0"
+    "error(QAbstractSocket::SocketError)\0"
+    "dealTimer()\0connected()\0disconnected()\0"
+    "err\0displayError(QAbstractSocket::SocketError)\0"
+    "readMessage()\0"
 };
 
 const QMetaObject SocketControl::staticMetaObject = {
@@ -76,12 +84,17 @@ int SocketControl::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: sendData((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< const uint(*)>(_a[2]))); break;
-        case 1: readData(); break;
-        case 2: error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 3: dealTimer(); break;
+        case 1: tcpClientStart(); break;
+        case 2: readData(); break;
+        case 3: error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 4: dealTimer(); break;
+        case 5: connected(); break;
+        case 6: disconnected(); break;
+        case 7: displayError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 8: readMessage(); break;
         default: ;
         }
-        _id -= 4;
+        _id -= 9;
     }
     return _id;
 }

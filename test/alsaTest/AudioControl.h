@@ -41,6 +41,7 @@ public:
     void addToMixerData(const uint8_t id, const char *data, const unsigned int len);
     void up();
     void down();
+    void decoder(uint8_t bitStream[], uint8_t bitStreamLength);
 
 protected:
     virtual void run();
@@ -52,7 +53,6 @@ private:
     void dealPlaybackData();
 
     void encoder(const char *data, const unsigned int len);
-    void decoder(uint8_t bitStream[], uint8_t bitStreamLength);
 
     void parametersBitStream2Array(uint8_t bitStream[], uint16_t parameters[]);
     void parametersArray2BitStream(uint16_t parameters[], uint8_t bitStream[]);

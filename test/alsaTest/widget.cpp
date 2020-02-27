@@ -15,6 +15,7 @@ Widget::Widget(QWidget *parent)
     if (AudioControl::getInstance()->audioControlInit(status))
     {
         AudioControl::getInstance()->start();
+        //m_socketControl->tcpClientStart();
     }
     qDebug() << status;
 }

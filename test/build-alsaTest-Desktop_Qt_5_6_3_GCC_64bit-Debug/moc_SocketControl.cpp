@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_SocketControl_t {
-    QByteArrayData data[11];
-    char stringdata0[111];
+    QByteArrayData data[17];
+    char stringdata0[178];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,17 +35,24 @@ QT_MOC_LITERAL(2, 23, 0), // ""
 QT_MOC_LITERAL(3, 24, 11), // "const char*"
 QT_MOC_LITERAL(4, 36, 4), // "data"
 QT_MOC_LITERAL(5, 41, 3), // "len"
-QT_MOC_LITERAL(6, 45, 8), // "readData"
-QT_MOC_LITERAL(7, 54, 5), // "error"
-QT_MOC_LITERAL(8, 60, 28), // "QAbstractSocket::SocketError"
-QT_MOC_LITERAL(9, 89, 11), // "socketError"
-QT_MOC_LITERAL(10, 101, 9) // "dealTimer"
+QT_MOC_LITERAL(6, 45, 14), // "tcpClientStart"
+QT_MOC_LITERAL(7, 60, 8), // "readData"
+QT_MOC_LITERAL(8, 69, 5), // "error"
+QT_MOC_LITERAL(9, 75, 28), // "QAbstractSocket::SocketError"
+QT_MOC_LITERAL(10, 104, 11), // "socketError"
+QT_MOC_LITERAL(11, 116, 9), // "dealTimer"
+QT_MOC_LITERAL(12, 126, 9), // "connected"
+QT_MOC_LITERAL(13, 136, 12), // "disconnected"
+QT_MOC_LITERAL(14, 149, 12), // "displayError"
+QT_MOC_LITERAL(15, 162, 3), // "err"
+QT_MOC_LITERAL(16, 166, 11) // "readMessage"
 
     },
     "SocketControl\0sendData\0\0const char*\0"
-    "data\0len\0readData\0error\0"
+    "data\0len\0tcpClientStart\0readData\0error\0"
     "QAbstractSocket::SocketError\0socketError\0"
-    "dealTimer"
+    "dealTimer\0connected\0disconnected\0"
+    "displayError\0err\0readMessage"
 };
 #undef QT_MOC_LITERAL
 
@@ -55,7 +62,7 @@ static const uint qt_meta_data_SocketControl[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -63,15 +70,25 @@ static const uint qt_meta_data_SocketControl[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    2,   34,    2, 0x0a /* Public */,
-       6,    0,   39,    2, 0x08 /* Private */,
-       7,    1,   40,    2, 0x08 /* Private */,
-      10,    0,   43,    2, 0x08 /* Private */,
+       1,    2,   59,    2, 0x0a /* Public */,
+       6,    0,   64,    2, 0x0a /* Public */,
+       7,    0,   65,    2, 0x08 /* Private */,
+       8,    1,   66,    2, 0x08 /* Private */,
+      11,    0,   69,    2, 0x08 /* Private */,
+      12,    0,   70,    2, 0x08 /* Private */,
+      13,    0,   71,    2, 0x08 /* Private */,
+      14,    1,   72,    2, 0x08 /* Private */,
+      16,    0,   75,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::UInt,    4,    5,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 8,    9,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 9,   10,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 9,   15,
     QMetaType::Void,
 
        0        // eod
@@ -84,15 +101,27 @@ void SocketControl::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->sendData((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< const uint(*)>(_a[2]))); break;
-        case 1: _t->readData(); break;
-        case 2: _t->error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 3: _t->dealTimer(); break;
+        case 1: _t->tcpClientStart(); break;
+        case 2: _t->readData(); break;
+        case 3: _t->error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 4: _t->dealTimer(); break;
+        case 5: _t->connected(); break;
+        case 6: _t->disconnected(); break;
+        case 7: _t->displayError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 8: _t->readMessage(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-        case 2:
+        case 3:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QAbstractSocket::SocketError >(); break;
+            }
+            break;
+        case 7:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
@@ -128,13 +157,13 @@ int SocketControl::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 9;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 9;
     }
     return _id;
 }
