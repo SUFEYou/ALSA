@@ -33,7 +33,7 @@ void AudioPlayback::run()
         if (rc == -EPIPE)
         {
               /* EPIPE means underrun */
-              qDebug() << "underrun occurred";
+              //qDebug() << "underrun occurred";
               snd_pcm_prepare(m_handle);
         }
         else if (rc < 0)
@@ -44,7 +44,7 @@ void AudioPlayback::run()
         {
             qDebug() << "short write, write " << rc << "frames";
         }
-        qDebug() << "write " << rc << "frames";
+        //qDebug() << "write " << rc << "frames";
     }
     m_stop = false;
 }

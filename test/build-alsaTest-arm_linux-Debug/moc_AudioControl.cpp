@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'AudioControl.h'
 **
-** Created: Tue Feb 25 22:27:49 2020
+** Created: Thu Feb 27 13:57:50 2020
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,18 +23,22 @@ static const uint qt_meta_data_AudioControl[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       1,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       0,       // signalCount
+       1,       // signalCount
+
+ // signals: signature, parameters, type, tag, flags
+      23,   14,   13,   13, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_AudioControl[] = {
-    "AudioControl\0"
+    "AudioControl\0\0data,len\0"
+    "sendCaptureData(const char*,uint)\0"
 };
 
 const QMetaObject AudioControl::staticMetaObject = {
@@ -64,6 +68,20 @@ int AudioControl::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QThread::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: sendCaptureData((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< const uint(*)>(_a[2]))); break;
+        default: ;
+        }
+        _id -= 1;
+    }
     return _id;
+}
+
+// SIGNAL 0
+void AudioControl::sendCaptureData(const char * _t1, const unsigned int _t2)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE

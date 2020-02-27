@@ -7,6 +7,8 @@ namespace Ui {
 class Widget;
 }
 
+class SocketControl;
+
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -23,6 +25,7 @@ private slots:
 
 private:
     Ui::Widget *ui;
+    SocketControl *m_socketControl;
 };
 
 #endif // WIDGET_H

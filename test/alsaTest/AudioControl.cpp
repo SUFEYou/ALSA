@@ -149,7 +149,8 @@ void AudioControl::dealCaptureData()
         {
             //addToPlaybackDataList(tmp, len);
             addToMixerData(1, tmp, len);
-            //encoder(tmp, len);
+            //emit sendCaptureData(tmp, len);
+            encoder(tmp, len);
            // addToMixerData(2, tmp, len);
            // addToMixerData(3, tmp, len);
         }
@@ -158,6 +159,7 @@ void AudioControl::dealCaptureData()
 
 void AudioControl::dealPlaybackData()
 {
+    QMutexLocker locker(&m_mixerDataMutex);
     AudioPeriodDataList data;
     data.clear();
     for(SoundMixerMap::iterator iter = m_mixerData.begin(); iter != m_mixerData.end(); ++iter)
@@ -212,6 +214,7 @@ void AudioControl::dealPlaybackData()
 
 void AudioControl::addToMixerData(const uint8_t id, const char *data, const unsigned int len)
 {
+    QMutexLocker locker(&m_mixerDataMutex);
     SoundMixerMap::const_iterator iter = m_mixerData.find(id);
     if (iter == m_mixerData.constEnd())
     {
@@ -257,6 +260,7 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     {
         //qDebug() << "bitStreamLength == 10";
         decoder(bitStream, bitStreamLength);
+        emit sendCaptureData(bitStream, bitStreamLength);
     }
     else if (bitStreamLength == 2)
     {

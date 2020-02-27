@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,12 +28,16 @@ SOURCES += main.cpp\
     AudioControl.cpp \
     AudioPlayback.cpp \
     AudioCapture.cpp \
-    SoundMixer.cpp
+    SoundMixer.cpp \
+    SocketControl.cpp \
+    RadioControl.cpp
 
 HEADERS  += widget.h \
     AudioControl.h \
     AudioPlayback.h \
     AudioCapture.h \
-    SoundMixer.h
+    SoundMixer.h \
+    SocketControl.h \
+    RadioControl.h
 
 FORMS    += widget.ui

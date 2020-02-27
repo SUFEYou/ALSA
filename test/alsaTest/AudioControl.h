@@ -58,7 +58,7 @@ private:
     void parametersArray2BitStream(uint16_t parameters[], uint8_t bitStream[]);
 
 signals:
-
+    void sendCaptureData(const char *data, const unsigned int len);
 
 private slots:
 
@@ -73,7 +73,7 @@ private:
     AudioPeriodDataList                     m_playbackDataList;
     QMutex                                  m_playbackDataMutex;
     SoundMixerMap                           m_mixerData;
-
+    QMutex                                  m_mixerDataMutex;
     SoundMixer                              *m_soundMixer;
     bcg729EncoderChannelContextStruct       *m_encoderChannelContextStruct;
     bcg729DecoderChannelContextStruct       *m_decoderChannelContextStruct;

@@ -3,7 +3,7 @@
 
 //使用 amixer scontrols,中的选项
 //char * sctrlstr = "Digital Input";
-char * sctrlstr = "PCM";
+//char * sctrlstr = "PCM";
 
 SoundMixer::SoundMixer()
            : m_handle(NULL)
@@ -40,7 +40,7 @@ bool SoundMixer::soundMixerInit(QString& status)
     while(m_elem)
     {
         //比较element名字是否是我们想要设置的选项
-        if (strcmp( sctrlstr, snd_mixer_selem_get_name (m_elem)) == 0)
+        if (strcmp("PCM", snd_mixer_selem_get_name (m_elem)) == 0)
         {
             qDebug() << "elem name: " << QString(snd_mixer_selem_get_name (m_elem));
             break;
