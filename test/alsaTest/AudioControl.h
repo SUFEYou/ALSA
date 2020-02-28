@@ -41,7 +41,7 @@ public:
     void addToMixerData(const uint8_t id, const char *data, const unsigned int len);
     void up();
     void down();
-    void decoder(uint8_t bitStream[], uint8_t bitStreamLength);
+    void decoder(const uint8_t id, uint8_t bitStream[], uint8_t bitStreamLength);
 
 protected:
     virtual void run();

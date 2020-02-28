@@ -148,9 +148,9 @@ void AudioControl::dealCaptureData()
         if (len > 0)
         {
             //addToPlaybackDataList(tmp, len);
-            addToMixerData(1, tmp, len);
-            //emit sendCaptureData(tmp, len);
-            encoder(tmp, len);
+            //addToMixerData(1, tmp, len);
+            emit sendCaptureData(tmp, len);
+            //encoder(tmp, len);
            // addToMixerData(2, tmp, len);
            // addToMixerData(3, tmp, len);
         }
@@ -259,7 +259,7 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     if (bitStreamLength == 10)
     {
         //qDebug() << "bitStreamLength == 10";
-        //decoder(bitStream, bitStreamLength);
+        //decoder(1, bitStream, bitStreamLength);
         emit sendCaptureData(bitStream, bitStreamLength);
     }
     else if (bitStreamLength == 2)
@@ -274,7 +274,7 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     }
 }
 
-void AudioControl::decoder(uint8_t bitStream[], uint8_t bitStreamLength)
+void AudioControl::decoder(const uint8_t id, uint8_t bitStream[], uint8_t bitStreamLength)
 {
     int16_t outputBuffer[80]; /* output buffer: the reconstructed signal */
     bcg729Decoder(m_decoderChannelContextStruct, bitStream, bitStreamLength, 0, 0, 0, outputBuffer);
@@ -283,8 +283,8 @@ void AudioControl::decoder(uint8_t bitStream[], uint8_t bitStreamLength)
     {
         memcpy(&tmp[2*i], &outputBuffer[i], sizeof(int16_t));
     }
-    //addToPlaybackDataList(tmp, 160);
-    addToMixerData(2, tmp, 160);
+    addToPlaybackDataList(tmp, 160);
+    //addToMixerData(id, tmp, 160);
 
 }
 

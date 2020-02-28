@@ -6,7 +6,7 @@
 SocketControl::SocketControl(QObject *parent)
               : QObject(parent)
               , m_udpSocket(new QUdpSocket(this))
-              , m_hostAddress("192.168.0.232")
+              , m_hostAddress("192.168.0.111")
               , m_port(6000)
               , m_timer(new QTimer(this))
               , m_TcpSocket(new QTcpSocket(this))
@@ -42,8 +42,8 @@ void SocketControl::readData()
        m_udpSocket->readDatagram(datagram.data(), datagram.size());
        qDebug() << QTime::currentTime().toString() << " Recv UDP Data :" << datagram.size();
        //AudioControl::getInstance()->addToMixerData(2, datagram.data(), datagram.size());
-       //AudioControl::getInstance()->addToPlaybackDataList(datagram.data(), datagram.size());
-       AudioControl::getInstance()->decoder(datagram.data(), datagram.size());
+       AudioControl::getInstance()->addToPlaybackDataList(datagram.data(), datagram.size());
+       //AudioControl::getInstance()->decoder(2, datagram.data(), datagram.size());
     }
 }
 
