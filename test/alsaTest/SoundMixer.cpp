@@ -10,7 +10,7 @@ SoundMixer::SoundMixer()
            , m_elem(NULL)
            , m_volMin(0)
            , m_volMax(0)
-           , m_val(20)
+           , m_val(63)
 {
 
 }

@@ -12,6 +12,10 @@ class SocketControl : public QObject
     Q_OBJECT
 public:
     SocketControl(QObject *parent = NULL);
+    SocketControl(QObject *parent = NULL, quint16 port = 6000, quint8 id = 0);
+
+private:
+    void init();
 
 public slots:
     void sendData(const char *data, const unsigned int len);
@@ -31,6 +35,7 @@ private:
     QUdpSocket          *m_udpSocket;
     QHostAddress        m_hostAddress;
     quint16             m_port;
+    quint8              m_id;
     QTimer              *m_timer;
 
     QTcpSocket          *m_TcpSocket;

@@ -1,5 +1,4 @@
 #include "AudioPlayback.h"
-#include "AudioControl.h"
 #include <QDebug>
 
 AudioPlayback::AudioPlayback()
@@ -11,14 +10,20 @@ AudioPlayback::AudioPlayback()
 
 }
 
+void AudioPlayback::audioPlaybackConnect()
+{
+    connect(AudioControl::getInstance(), SIGNAL(sendMixerData(const char*,uint)), this, SLOT(addPlaybackData(const char*,uint)));
+}
+
 void AudioPlayback::run()
 {
-    char a[4096];
-    int rc = 0;
+    static char a[4096];
+    static int rc = 0;
     while (!m_stop)
     {
-        memset(a, 0, sizeof(a));
+        //memset(a, 0, sizeof(a));
         AudioControl::getInstance()->popFromPlaybackDataList(a, rc);
+        //popFromPlaybackDataList(a, rc);
         if (rc <= 0)
         {
             //qDebug() << "Do Not Have Enough Data To Play!";
@@ -91,4 +96,39 @@ bool AudioPlayback::audioPlaybackInit(QString& status)
     //unsigned char *buffer = malloc(4*frames);//由于双通道，16bit，每个通道2个字节，一个周期所需要的空间为4个字节*帧数
     status = QString("snd pcm open succeed");
     return true;
+}
+
+void AudioPlayback::addPlaybackData(const char *data, const unsigned int len)
+{
+    //QMutexLocker locker(&m_playbackDataMutex);
+    if (len > 0)
+    {
+        pAudioPeriodData tmp(new AudioPeriodData);
+        memcpy(tmp->data, data, len);
+        tmp->dataLen = len;
+        if (m_playbackDataList.length() > 100)
+        {
+            AudioPeriodDataList::iterator iter = m_playbackDataList.begin();
+            m_playbackDataList.erase(iter, iter+20);
+        }
+        m_playbackDataList.append(tmp);
+    }
+}
+
+void AudioPlayback::popFromPlaybackDataList(char *data, int &len)
+{
+    //QMutexLocker locker(&m_playbackDataMutex);
+    qDebug() << "########################PlaybackDataList length = " << m_playbackDataList.length();
+    if (!m_playbackDataList.empty())
+    {
+        static pAudioPeriodData tmp;
+        tmp = m_playbackDataList.front();
+        m_playbackDataList.pop_front();
+        len = tmp->dataLen;
+        memcpy(data, tmp->data, len);
+    }
+    else
+    {
+        len = -1;
+    }
 }

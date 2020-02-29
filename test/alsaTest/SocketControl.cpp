@@ -3,32 +3,54 @@
 #include <QTime>
 #include <QDebug>
 
+#define UDPADDRESS "192.168.0.111"
+#define TCPADDRESS "192.168.1.5"
+
 SocketControl::SocketControl(QObject *parent)
               : QObject(parent)
               , m_udpSocket(new QUdpSocket(this))
-              , m_hostAddress("192.168.0.111")
+              , m_hostAddress(UDPADDRESS)
               , m_port(6000)
+              , m_id(0)
               , m_timer(new QTimer(this))
               , m_TcpSocket(new QTcpSocket(this))
               , m_TcpAddr("192.168.1.5")
               , m_TcpPort(6060)
 {
+    init();
+}
 
+SocketControl::SocketControl(QObject *parent, quint16 port, quint8 id)
+              : QObject(parent)
+              , m_udpSocket(new QUdpSocket(this))
+              , m_hostAddress(UDPADDRESS)
+              , m_port(port)
+              , m_id(id)
+              , m_timer(new QTimer(this))
+              , m_TcpSocket(new QTcpSocket(this))
+              , m_TcpAddr("192.168.1.5")
+              , m_TcpPort(6060)
+{
+    init();
+}
+
+void SocketControl::init()
+{
     connect(m_udpSocket, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(m_udpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
     connect(AudioControl::getInstance(), SIGNAL(sendCaptureData(const char*,uint)), this, SLOT(sendData(const char*,uint)));
-    m_udpSocket->bind(QHostAddress::Any, 6000, QUdpSocket::ShareAddress);
+    m_udpSocket->bind(QHostAddress::Any, m_port, QUdpSocket::ShareAddress);
 
-    connect(m_TcpSocket, SIGNAL(connected()), this, SLOT(connected()));
-    connect(m_TcpSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(m_TcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
-    connect(m_TcpSocket, SIGNAL(readyRead()), this, SLOT(readMessage()));
-
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(dealTimer()));
+    //connect(m_TcpSocket, SIGNAL(connected()), this, SLOT(connected()));
+    //connect(m_TcpSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    //connect(m_TcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
+    //connect(m_TcpSocket, SIGNAL(readyRead()), this, SLOT(readMessage()));
+    //connect(m_timer, SIGNAL(timeout()), this, SLOT(dealTimer()));
 }
 
 void SocketControl::sendData(const char *data, const unsigned int len)
 {
+    //qDebug() << QTime::currentTime().toString() << " Send Data :" << len;
     m_udpSocket->writeDatagram(data, len, m_hostAddress, m_port);
     //m_TcpSocket->write(data, len);
 }
@@ -40,10 +62,13 @@ void SocketControl::readData()
        QByteArray datagram;
        datagram.resize(m_udpSocket->pendingDatagramSize());
        m_udpSocket->readDatagram(datagram.data(), datagram.size());
-       qDebug() << QTime::currentTime().toString() << " Recv UDP Data :" << datagram.size();
-       //AudioControl::getInstance()->addToMixerData(2, datagram.data(), datagram.size());
-       AudioControl::getInstance()->addToPlaybackDataList(datagram.data(), datagram.size());
-       //AudioControl::getInstance()->decoder(2, datagram.data(), datagram.size());
+       //qDebug() << QTime::currentTime().toString() << " Recv UDP Data :" << datagram.size();
+
+       AudioControl::getInstance()->addToMixerData(m_id, datagram.data(), datagram.size());
+
+       //AudioControl::getInstance()->addToPlaybackDataList(datagram.data(), datagram.size());
+
+       //AudioControl::getInstance()->decoder(m_id, datagram.data(), datagram.size());
     }
 }
 

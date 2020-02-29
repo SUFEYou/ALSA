@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include "alsa/asoundlib.h"
+#include "AudioControl.h"
 
 
 class AudioPlayback : public QThread
@@ -11,15 +12,25 @@ class AudioPlayback : public QThread
 public:
     AudioPlayback();
     bool audioPlaybackInit(QString& status);
+    void audioPlaybackConnect();
 
 protected:
     virtual void run();
+
+private:
+    void popFromPlaybackDataList(char *data, int &len);
+
+private slots:
+    void addPlaybackData(const char *data, const unsigned int len);
 
 private:
     bool                    m_stop;
     snd_pcm_t               *m_handle;//pcm句柄
     snd_pcm_hw_params_t     *m_params;//pcm属性
     unsigned int            m_frameSize;
+
+    AudioPeriodDataList     m_playbackDataList;
+    QMutex                  m_playbackDataMutex;
 
 };
 

@@ -13,6 +13,8 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -fpermissive
 
+CONFIG += debug
+
 #INCLUDEPATH += /root/test/OpenSource/install/include
 #LIBS += -L/lib/x86_64-linux-gnu -lasound -ldl -lm
 #LIBS += -L/root/test/OpenSource/install/lib -lbcg729

@@ -2,6 +2,8 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QSharedPointer>
+#include <QList>
 
 namespace Ui {
 class Widget;
@@ -24,8 +26,8 @@ private slots:
     void on_down_clicked();
 
 private:
-    Ui::Widget *ui;
-    SocketControl *m_socketControl;
+    Ui::Widget                                  *ui;
+    QList<QSharedPointer<SocketControl> >       m_socketControl;
 };
 
 #endif // WIDGET_H

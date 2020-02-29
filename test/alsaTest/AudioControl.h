@@ -59,6 +59,7 @@ private:
 
 signals:
     void sendCaptureData(const char *data, const unsigned int len);
+    void sendMixerData(const char *data, const unsigned int len);
 
 private slots:
 

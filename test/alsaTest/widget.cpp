@@ -7,7 +7,6 @@
 Widget::Widget(QWidget *parent)
        : QWidget(parent)
        , ui(new Ui::Widget)
-       , m_socketControl(new SocketControl(this))
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
@@ -15,7 +14,11 @@ Widget::Widget(QWidget *parent)
     if (AudioControl::getInstance()->audioControlInit(status))
     {
         AudioControl::getInstance()->start();
-        //m_socketControl->tcpClientStart();
+        for (int i = 0; i < 2; ++i)
+        {
+            QSharedPointer<SocketControl> tmp(new SocketControl(this, 6000+i, i));
+            m_socketControl.push_back(tmp);
+        }
     }
     qDebug() << status;
 }
