@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QTime>
 
+//0:Opus 1:G729
+#define ENCODER_DECODER_TYPE 0
 
 AudioControl* AudioControl::m_instance = NULL;
 QMutex AudioControl::m_getMutex;
@@ -19,14 +21,48 @@ AudioControl::AudioControl()
     m_captureDataList.clear();
     m_playbackDataList.clear();
     m_mixerData.clear();
+
+#if ENCODER_DECODER_TYPE
     m_encoderChannelContextStruct = initBcg729EncoderChannel(0);
     m_decoderChannelContextStruct = initBcg729DecoderChannel();
+#else
+    m_encoder = opus_encoder_create(8000, 1, OPUS_APPLICATION_AUDIO, &m_err);
+    if (!m_encoder || m_err < 0)
+    {
+        qDebug() << "failed to create encoder: " << QString(opus_strerror(m_err));
+        if (!m_encoder)
+        {
+            opus_encoder_destroy(m_encoder);
+        }
+    }
+
+    m_decoder = opus_decoder_create(8000, 1, &m_err);
+    if (!m_decoder || m_err < 0)
+    {
+        qDebug() << "failed to create decoder: " << QString(opus_strerror(m_err));
+        if (!m_decoder)
+        {
+            opus_decoder_destroy(m_decoder);
+        }
+    }
+#endif
 }
 
 AudioControl::~AudioControl()
 {
+#if ENCODER_DECODER_TYPE
     closeBcg729EncoderChannel(m_encoderChannelContextStruct);
     closeBcg729DecoderChannel(m_decoderChannelContextStruct);
+#else
+    if (!m_encoder)
+    {
+        opus_encoder_destroy(m_encoder);
+    }
+    if (!m_decoder)
+    {
+        opus_decoder_destroy(m_decoder);
+    }
+#endif
 }
 
 AudioControl* AudioControl::getInstance()
@@ -129,7 +165,7 @@ void AudioControl::addToPlaybackDataList(const char *data, const unsigned int le
 void AudioControl::popFromPlaybackDataList(char *data, int &len)
 {
     QMutexLocker locker(&m_playbackDataMutex);
-    qDebug() << "PlaybackDataList length = " << m_playbackDataList.length();
+    //qDebug() << "PlaybackDataList length = " << m_playbackDataList.length();
     if (!m_playbackDataList.empty())
     {
         static pAudioPeriodData tmp;
@@ -156,8 +192,8 @@ void AudioControl::dealCaptureData()
         {
             //addToPlaybackDataList(tmp, len);
             //addToMixerData(1, tmp, len);
-            emit sendCaptureData(tmp, len);
-            //encoder(tmp, len);
+            //emit sendCaptureData(tmp, len);
+            encoder(tmp, len);
             //addToMixerData(2, tmp, len);
             //addToMixerData(3, tmp, len);
         }
@@ -289,7 +325,6 @@ void AudioControl::encoder(const char *data, const unsigned int len)
 {
     QTime t;
     t.start();
-
     //qDebug() << "In AudioControl::encoder, len = " << len;
     if (len < 160)
         return;
@@ -298,6 +333,8 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     {
         memcpy(&inputBuffer[i], &data[i*2], sizeof(int16_t));
     }
+
+#if ENCODER_DECODER_TYPE
     uint8_t bitStream[10];
     uint8_t bitStreamLength = 0;
     bcg729Encoder(m_encoderChannelContextStruct, inputBuffer, bitStream, &bitStreamLength);
@@ -306,7 +343,7 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     if (bitStreamLength == 10)
     {
         //qDebug() << "bitStreamLength == 10";
-        //decoder(1, bitStream, bitStreamLength);
+        //decoder(0, bitStream, bitStreamLength);
         emit sendCaptureData(bitStream, bitStreamLength);
     }
     else if (bitStreamLength == 2)
@@ -319,22 +356,48 @@ void AudioControl::encoder(const char *data, const unsigned int len)
         /* bitstream to 0, un transmitted frame */
         qDebug() << "bitStreamLength == 0";
     }
+#else
+    unsigned char cbits[DATAMAXSIZE];
+    int nbBytes = opus_encode(m_encoder, inputBuffer, 80, cbits, DATAMAXSIZE);
+    if (nbBytes > 0)
+    {
+        //qDebug() << "encoder data size: " << nbBytes;
+        //decoder(0, cbits, nbBytes);
+        emit sendCaptureData(cbits, nbBytes);
+    }
+
+#endif
 
     //qDebug() << "Encoder Time elapsed: " << t.elapsed();
 }
 
-void AudioControl::decoder(const uint8_t id, uint8_t bitStream[], uint8_t bitStreamLength)
+void AudioControl::decoder(const uint8_t id, const char *bitStream, uint8_t bitStreamLength)
 {
     QTime t;
     t.start();
 
     int16_t outputBuffer[80]; /* output buffer: the reconstructed signal */
-    bcg729Decoder(m_decoderChannelContextStruct, bitStream, bitStreamLength, 0, 0, 0, outputBuffer);
     char tmp[DATAMAXSIZE];
+#if ENCODER_DECODER_TYPE
+    bcg729Decoder(m_decoderChannelContextStruct, bitStream, bitStreamLength, 0, 0, 0, outputBuffer);
     for (int i = 0; i < 80; ++i)
     {
         memcpy(&tmp[2*i], &outputBuffer[i], sizeof(int16_t));
     }
+#else
+
+    int frame_size = opus_decode(m_decoder, bitStream, bitStreamLength, outputBuffer, 80, 0);
+    if (frame_size > 0 && frame_size <= 80)
+    {
+        //qDebug() << "decoder data size : " << frame_size;
+        for (int i = 0; i < frame_size; ++i)
+        {
+            memcpy(&tmp[2*i], &outputBuffer[i], sizeof(int16_t));
+        }
+    }
+
+#endif
+
     //addToPlaybackDataList(tmp, 160);
     addToMixerData(id, tmp, 160);
 

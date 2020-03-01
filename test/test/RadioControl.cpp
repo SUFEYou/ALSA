@@ -13,7 +13,7 @@ RadioControl::RadioControl(QObject *parent)
             , m_UdpSocket(new QUdpSocket(this))
             , m_Timer(new QTimer(this))
             , m_UdpStartTimer(new QTimer(this))
-            , m_TcpAddr("192.168.1.5")
+            , m_TcpAddr("192.168.1.11")
             , m_TcpPort(6060)
             ,m_UdpAddr("224.1.1.1")
             ,m_UdpPort(65000)
@@ -96,7 +96,7 @@ void RadioControl::UDPStart()
     if (!result)
     {
         qDebug() << "UDP Join Multicast Group Err: " << m_UdpSocket->errorString();
-        m_UdpStartTimer->start(10000);
+        //m_UdpStartTimer->start(10000);
     }
     else
     {

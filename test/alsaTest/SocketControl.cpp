@@ -3,7 +3,7 @@
 #include <QTime>
 #include <QDebug>
 
-#define UDPADDRESS "192.168.0.111"
+#define UDPADDRESS "192.168.1.5"
 #define TCPADDRESS "192.168.1.5"
 
 SocketControl::SocketControl(QObject *parent)
@@ -64,11 +64,11 @@ void SocketControl::readData()
        m_udpSocket->readDatagram(datagram.data(), datagram.size());
        //qDebug() << QTime::currentTime().toString() << " Recv UDP Data :" << datagram.size();
 
-       AudioControl::getInstance()->addToMixerData(m_id, datagram.data(), datagram.size());
+       //AudioControl::getInstance()->addToMixerData(m_id, datagram.data(), datagram.size());
 
        //AudioControl::getInstance()->addToPlaybackDataList(datagram.data(), datagram.size());
 
-       //AudioControl::getInstance()->decoder(m_id, datagram.data(), datagram.size());
+       AudioControl::getInstance()->decoder(m_id, datagram.data(), datagram.size());
     }
 }
 

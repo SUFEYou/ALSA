@@ -10,11 +10,14 @@
 #include "bcg729/encoder.h"
 #include "bcg729/decoder.h"
 
+#include "opus/opus.h"
+#include "opus/opus_types.h"
+
 class AudioCapture;
 class AudioPlayback;
 class SoundMixer;
 
-#define DATAMAXSIZE 4096
+#define DATAMAXSIZE 512
 
 typedef struct AUDIOPERIODDATA {
     char        data[DATAMAXSIZE];
@@ -41,7 +44,7 @@ public:
     void addToMixerData(const uint8_t id, const char *data, const unsigned int len);
     void up();
     void down();
-    void decoder(const uint8_t id, uint8_t bitStream[], uint8_t bitStreamLength);
+    void decoder(const uint8_t id, const char *bitStream, uint8_t bitStreamLength);
 
 protected:
     virtual void run();
@@ -78,6 +81,11 @@ private:
     SoundMixer                              *m_soundMixer;
     bcg729EncoderChannelContextStruct       *m_encoderChannelContextStruct;
     bcg729DecoderChannelContextStruct       *m_decoderChannelContextStruct;
+
+    OpusEncoder                             *m_encoder;
+    OpusDecoder                             *m_decoder;
+    int                                     m_err;
+
 };
 
 #endif // AUDIOCONTROL_H

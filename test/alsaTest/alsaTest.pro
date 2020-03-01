@@ -15,14 +15,18 @@ QMAKE_CXXFLAGS += -fpermissive
 
 CONFIG += debug
 
-#INCLUDEPATH += /root/test/OpenSource/install/include
-#LIBS += -L/lib/x86_64-linux-gnu -lasound -ldl -lm
-#LIBS += -L/root/test/OpenSource/install/lib -lbcg729
+INCLUDEPATH += /root/test/OpenSource/install/include
+INCLUDEPATH += /usr/local/include
+LIBS += -L/lib/x86_64-linux-gnu -lasound -ldl -lm
+LIBS += -L/root/test/OpenSource/install/lib -lbcg729
+LIBS += -L/usr/local/lib -lopus
 
-INCLUDEPATH += /usr/local/arm/alsa/include
-INCLUDEPATH += /usr/local/arm/bcg729/include
-LIBS += -L/usr/local/arm/alsa/lib -lasound
-LIBS += -L/usr/local/arm/bcg729/lib -lbcg729
+#INCLUDEPATH += /usr/local/arm/alsa/include
+#INCLUDEPATH += /usr/local/arm/bcg729/include
+#INCLUDEPATH += /root/test/OpenSource/Opus/install/include
+#LIBS += -L/usr/local/arm/alsa/lib -lasound
+#LIBS += -L/usr/local/arm/bcg729/lib -lbcg729
+#LIBS += -L/root/test/OpenSource/Opus/install/lib -lopus
 
 
 SOURCES += main.cpp\
