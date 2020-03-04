@@ -2,10 +2,12 @@
 #define SOCKETCONTROL_H
 
 #include <QObject>
+#include <stdint.h>
 #include <QUdpSocket>
 #include <QTcpSocket>
 #include <QTcpServer>
 #include <QTimer>
+#include "AudioControl.h"
 
 class SocketControl : public QObject
 {
@@ -18,7 +20,8 @@ private:
     void init();
 
 public slots:
-    void sendData(const char *data, const unsigned int len);
+    //void sendData(uint8_t *data, const unsigned int len);
+    void sendData(AudioPeriodData data);
     void tcpClientStart();
 
 private slots:

@@ -12,12 +12,12 @@ AudioPlayback::AudioPlayback()
 
 void AudioPlayback::audioPlaybackConnect()
 {
-    connect(AudioControl::getInstance(), SIGNAL(sendMixerData(const char*,uint)), this, SLOT(addPlaybackData(const char*,uint)));
+    connect(AudioControl::getInstance(), SIGNAL(sendMixerData(const uint8_t*,uint)), this, SLOT(addPlaybackData(const uint8_t*,uint)));
 }
 
 void AudioPlayback::run()
 {
-    static char a[4096];
+    static uint8_t a[4096];
     static int rc = 0;
     while (!m_stop)
     {
@@ -98,7 +98,7 @@ bool AudioPlayback::audioPlaybackInit(QString& status)
     return true;
 }
 
-void AudioPlayback::addPlaybackData(const char *data, const unsigned int len)
+void AudioPlayback::addPlaybackData(const uint8_t *data, const unsigned int len)
 {
     //QMutexLocker locker(&m_playbackDataMutex);
     if (len > 0)
@@ -115,7 +115,7 @@ void AudioPlayback::addPlaybackData(const char *data, const unsigned int len)
     }
 }
 
-void AudioPlayback::popFromPlaybackDataList(char *data, int &len)
+void AudioPlayback::popFromPlaybackDataList(uint8_t *data, int &len)
 {
     //QMutexLocker locker(&m_playbackDataMutex);
     qDebug() << "########################PlaybackDataList length = " << m_playbackDataList.length();

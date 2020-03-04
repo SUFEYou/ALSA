@@ -13,7 +13,7 @@ AudioCapture::AudioCapture()
 
 void AudioCapture::run()
 {
-    char a[4096];
+    uint8_t a[4096];
     int rc = 0;
     while (!m_stop)
     {

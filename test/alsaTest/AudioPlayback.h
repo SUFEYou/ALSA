@@ -18,10 +18,10 @@ protected:
     virtual void run();
 
 private:
-    void popFromPlaybackDataList(char *data, int &len);
+    void popFromPlaybackDataList(uint8_t *data, int &len);
 
 private slots:
-    void addPlaybackData(const char *data, const unsigned int len);
+    void addPlaybackData(const uint8_t *data, const unsigned int len);
 
 private:
     bool                    m_stop;

@@ -7,7 +7,7 @@
 #include <QTime>
 
 //0:Opus 1:G729
-#define ENCODER_DECODER_TYPE 0
+#define ENCODER_DECODER_TYPE 1
 
 AudioControl* AudioControl::m_instance = NULL;
 QMutex AudioControl::m_getMutex;
@@ -26,7 +26,8 @@ AudioControl::AudioControl()
     m_encoderChannelContextStruct = initBcg729EncoderChannel(0);
     m_decoderChannelContextStruct = initBcg729DecoderChannel();
 #else
-    m_encoder = opus_encoder_create(8000, 1, OPUS_APPLICATION_AUDIO, &m_err);
+    //m_encoder = opus_encoder_create(8000, 1, OPUS_APPLICATION_AUDIO, &m_err);
+    m_encoder = opus_encoder_create(8000, 1, OPUS_APPLICATION_VOIP, &m_err);
     if (!m_encoder || m_err < 0)
     {
         qDebug() << "failed to create encoder: " << QString(opus_strerror(m_err));
@@ -104,7 +105,7 @@ bool AudioControl::audioControlInit(QString& status)
     if (!m_soundMixer->soundMixerInit(status))
     {
         qDebug() << "Sound Mixer Init err";
-        return false;
+        //return false;
     }
 
     m_audioPlayback->audioPlaybackConnect();
@@ -114,7 +115,7 @@ bool AudioControl::audioControlInit(QString& status)
     return true;
 }
 
-void AudioControl::addToCaptureDataList(const char *data, const unsigned int len)
+void AudioControl::addToCaptureDataList(const uint8_t *data, const unsigned int len)
 {
      QMutexLocker locker(&m_captureDataMutex);
      if (len > 0)
@@ -127,7 +128,7 @@ void AudioControl::addToCaptureDataList(const char *data, const unsigned int len
 
 }
 
-void AudioControl::popFromCaptureDataList(char *data, int &len)
+void AudioControl::popFromCaptureDataList(uint8_t *data, int &len)
 {
     QMutexLocker locker(&m_captureDataMutex);
     if (!m_captureDataList.empty())
@@ -145,7 +146,7 @@ void AudioControl::popFromCaptureDataList(char *data, int &len)
 
 }
 
-void AudioControl::addToPlaybackDataList(const char *data, const unsigned int len)
+void AudioControl::addToPlaybackDataList(const uint8_t *data, const unsigned int len)
 {
     QMutexLocker locker(&m_playbackDataMutex);
     if (len > 0)
@@ -162,7 +163,7 @@ void AudioControl::addToPlaybackDataList(const char *data, const unsigned int le
     }
 }
 
-void AudioControl::popFromPlaybackDataList(char *data, int &len)
+void AudioControl::popFromPlaybackDataList(uint8_t *data, int &len)
 {
     QMutexLocker locker(&m_playbackDataMutex);
     //qDebug() << "PlaybackDataList length = " << m_playbackDataList.length();
@@ -184,7 +185,7 @@ void AudioControl::dealCaptureData()
 {
     if (!m_captureDataList.empty())
     {
-        static char tmp[DATAMAXSIZE];
+        static uint8_t tmp[DATAMAXSIZE];
         static int len;
         memset(&tmp, 0, DATAMAXSIZE);
         popFromCaptureDataList(tmp, len);
@@ -285,7 +286,7 @@ void AudioControl::dealPlaybackData()
     //qDebug() << "Mixer Time elapsed: " << t.elapsed();
 }
 
-void AudioControl::addToMixerData(const uint8_t id, const char *data, const unsigned int len)
+void AudioControl::addToMixerData(const uint8_t id, uint8_t *data, const unsigned int len)
 {
     QMutexLocker locker(&m_mixerDataMutex);
     SoundMixerMap::const_iterator iter = m_mixerData.find(id);
@@ -301,11 +302,11 @@ void AudioControl::addToMixerData(const uint8_t id, const char *data, const unsi
         memcpy(d->data, data, len);
         d->dataLen = len;
         //qDebug() << "List size = " << list->length();
-        if (list->length() > 200)
+        if (list->length() > 100)
         {
             //list->pop_front();
             AudioPeriodDataList::iterator iter = list->begin();
-            list->erase(iter, iter+100);
+            list->erase(iter, iter+20);
         }
         list->append(d);
     }
@@ -321,7 +322,7 @@ void AudioControl::down()
     m_soundMixer->down();
 }
 
-void AudioControl::encoder(const char *data, const unsigned int len)
+void AudioControl::encoder(const uint8_t *data, const unsigned int len)
 {
     QTime t;
     t.start();
@@ -344,7 +345,18 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     {
         //qDebug() << "bitStreamLength == 10";
         //decoder(0, bitStream, bitStreamLength);
-        emit sendCaptureData(bitStream, bitStreamLength);
+//        emit sendCaptureData(bitStream, bitStreamLength);
+
+//        printf("emit Data: ");
+//        for (int i = 0; i < bitStreamLength; ++i)
+//            printf("%02X ", bitStream[i]);
+//        printf("\n\n");
+
+
+        AudioPeriodData periodData;
+        memcpy(periodData.data, bitStream, bitStreamLength);
+        periodData.dataLen = bitStreamLength;
+        emit sendCaptureData(periodData);
     }
     else if (bitStreamLength == 2)
     {
@@ -364,6 +376,11 @@ void AudioControl::encoder(const char *data, const unsigned int len)
         //qDebug() << "encoder data size: " << nbBytes;
         //decoder(0, cbits, nbBytes);
         emit sendCaptureData(cbits, nbBytes);
+
+        printf("len = %d, emit Data: ", nbBytes);
+        for (int i = 0; i < nbBytes; ++i)
+            printf("%02X ", cbits[i]);
+        printf("\n\n");
     }
 
 #endif
@@ -371,13 +388,15 @@ void AudioControl::encoder(const char *data, const unsigned int len)
     //qDebug() << "Encoder Time elapsed: " << t.elapsed();
 }
 
-void AudioControl::decoder(const uint8_t id, const char *bitStream, uint8_t bitStreamLength)
+void AudioControl::decoder(const uint8_t id, uint8_t *bitStream, uint8_t bitStreamLength)
 {
     QTime t;
     t.start();
 
+    QMutexLocker locker(&m_decoderMutex);
+
     int16_t outputBuffer[80]; /* output buffer: the reconstructed signal */
-    char tmp[DATAMAXSIZE];
+    uint8_t tmp[DATAMAXSIZE];
 #if ENCODER_DECODER_TYPE
     bcg729Decoder(m_decoderChannelContextStruct, bitStream, bitStreamLength, 0, 0, 0, outputBuffer);
     for (int i = 0; i < 80; ++i)
@@ -400,7 +419,6 @@ void AudioControl::decoder(const uint8_t id, const char *bitStream, uint8_t bitS
 
     //addToPlaybackDataList(tmp, 160);
     addToMixerData(id, tmp, 160);
-
     //qDebug() << "Decoder Time elapsed: " << t.elapsed();
 }
 

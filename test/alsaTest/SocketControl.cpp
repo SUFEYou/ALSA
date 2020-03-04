@@ -1,9 +1,9 @@
 #include "SocketControl.h"
-#include "AudioControl.h"
 #include <QTime>
 #include <QDebug>
+#include <stdio.h>
 
-#define UDPADDRESS "192.168.1.5"
+#define UDPADDRESS "192.168.1.15"
 #define TCPADDRESS "192.168.1.5"
 
 SocketControl::SocketControl(QObject *parent)
@@ -38,7 +38,8 @@ void SocketControl::init()
 {
     connect(m_udpSocket, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(m_udpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
-    connect(AudioControl::getInstance(), SIGNAL(sendCaptureData(const char*,uint)), this, SLOT(sendData(const char*,uint)));
+    //connect(AudioControl::getInstance(), SIGNAL(sendCaptureData(uint8_t*,uint)), this, SLOT(sendData(uint8_t*,uint)));
+    connect(AudioControl::getInstance(), SIGNAL(sendCaptureData(AudioPeriodData)), this, SLOT(sendData(AudioPeriodData)));
     m_udpSocket->bind(QHostAddress::Any, m_port, QUdpSocket::ShareAddress);
 
     //connect(m_TcpSocket, SIGNAL(connected()), this, SLOT(connected()));
@@ -48,11 +49,25 @@ void SocketControl::init()
     //connect(m_timer, SIGNAL(timeout()), this, SLOT(dealTimer()));
 }
 
-void SocketControl::sendData(const char *data, const unsigned int len)
+//void SocketControl::sendData(uint8_t *data, const unsigned int len)
+//{
+//    //qDebug() << QTime::currentTime().toString() << " Send Data :" << len;
+//    m_udpSocket->writeDatagram(data, len, m_hostAddress, m_port);
+//    //m_TcpSocket->write(data, len);
+//    printf("len = %d, send Data: ", len);
+//    for (unsigned int i = 0; i < len; ++i)
+//        printf("%02X ", data[i]);
+//    printf("\n");
+//}
+
+void SocketControl::sendData(AudioPeriodData data)
 {
-    //qDebug() << QTime::currentTime().toString() << " Send Data :" << len;
-    m_udpSocket->writeDatagram(data, len, m_hostAddress, m_port);
-    //m_TcpSocket->write(data, len);
+    m_udpSocket->writeDatagram(data.data, data.dataLen, m_hostAddress, m_port);
+
+//    printf("len = %d, send Data: ", data.dataLen);
+//    for (unsigned int i = 0; i < data.dataLen; ++i)
+//        printf("%02X ", data.data[i]);
+//    printf("\n");
 }
 
 void SocketControl::readData()
@@ -65,8 +80,6 @@ void SocketControl::readData()
        //qDebug() << QTime::currentTime().toString() << " Recv UDP Data :" << datagram.size();
 
        //AudioControl::getInstance()->addToMixerData(m_id, datagram.data(), datagram.size());
-
-       //AudioControl::getInstance()->addToPlaybackDataList(datagram.data(), datagram.size());
 
        AudioControl::getInstance()->decoder(m_id, datagram.data(), datagram.size());
     }

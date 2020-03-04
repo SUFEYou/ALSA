@@ -89,8 +89,8 @@ void RadioControl::readMessage()
 void RadioControl::UDPStart()
 {
     m_UdpSocket->abort();
-    //m_UdpSocket->bind(QHostAddress::Any, m_UdpPort, QUdpSocket::ShareAddress);
-    m_UdpSocket->bind(QHostAddress::AnyIPv4, m_UdpPort, QUdpSocket::ShareAddress);
+    m_UdpSocket->bind(QHostAddress::Any, m_UdpPort, QUdpSocket::ShareAddress);
+    //m_UdpSocket->bind(QHostAddress::AnyIPv4, m_UdpPort, QUdpSocket::ShareAddress);
     m_UdpSocket->setSocketOption(QAbstractSocket::MulticastLoopbackOption, 0);
     bool result = m_UdpSocket->joinMulticastGroup(m_UdpAddr);
     if (!result)
