@@ -7,7 +7,7 @@
 #include <QTime>
 
 //0:Opus 1:G729
-#define ENCODER_DECODER_TYPE 1
+#define ENCODER_DECODER_TYPE 0
 
 AudioControl* AudioControl::m_instance = NULL;
 QMutex AudioControl::m_getMutex;
@@ -375,12 +375,16 @@ void AudioControl::encoder(const uint8_t *data, const unsigned int len)
     {
         //qDebug() << "encoder data size: " << nbBytes;
         //decoder(0, cbits, nbBytes);
-        emit sendCaptureData(cbits, nbBytes);
+        //emit sendCaptureData(cbits, nbBytes);
 
-        printf("len = %d, emit Data: ", nbBytes);
-        for (int i = 0; i < nbBytes; ++i)
-            printf("%02X ", cbits[i]);
-        printf("\n\n");
+//        printf("len = %d, emit Data: ", nbBytes);
+//        for (int i = 0; i < nbBytes; ++i)
+//            printf("%02X ", cbits[i]);
+//        printf("\n\n");
+        AudioPeriodData periodData;
+        memcpy(periodData.data, cbits, nbBytes);
+        periodData.dataLen = nbBytes;
+        emit sendCaptureData(periodData);
     }
 
 #endif
