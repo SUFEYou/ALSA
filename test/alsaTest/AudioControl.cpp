@@ -131,7 +131,8 @@ void AudioControl::addToCaptureDataList(const uint8_t *data, const unsigned int 
 void AudioControl::popFromCaptureDataList(uint8_t *data, int &len)
 {
     QMutexLocker locker(&m_captureDataMutex);
-    if (!m_captureDataList.empty())
+    //if (!m_captureDataList.empty())
+    if (false == m_captureDataList.isEmpty())
     {
         static pAudioPeriodData tmp;
         tmp = m_captureDataList.front();
@@ -154,10 +155,10 @@ void AudioControl::addToPlaybackDataList(const uint8_t *data, const unsigned int
         pAudioPeriodData tmp(new AudioPeriodData);
         memcpy(tmp->data, data, len);
         tmp->dataLen = len;
-        if (m_playbackDataList.length() > 100)
+        if (m_playbackDataList.length() > 50)
         {
             AudioPeriodDataList::iterator iter = m_playbackDataList.begin();
-            m_playbackDataList.erase(iter, iter+20);
+            m_playbackDataList.erase(iter, iter+5);
         }
         m_playbackDataList.append(tmp);
     }
@@ -166,8 +167,15 @@ void AudioControl::addToPlaybackDataList(const uint8_t *data, const unsigned int
 void AudioControl::popFromPlaybackDataList(uint8_t *data, int &len)
 {
     QMutexLocker locker(&m_playbackDataMutex);
-    //qDebug() << "PlaybackDataList length = " << m_playbackDataList.length();
-    if (!m_playbackDataList.empty())
+
+    //QTime x;
+    //x.start();
+    //qDebug() << QTime::currentTime().toString() << "PlaybackDataList length = " << m_playbackDataList.length();
+    m_playbackDataList.length();
+    //qDebug() << "######################################### Elapsed Time: " << x.elapsed();
+
+    //if (!m_playbackDataList.empty())
+    if (false == m_playbackDataList.isEmpty())
     {
         static pAudioPeriodData tmp;
         tmp = m_playbackDataList.front();
@@ -181,9 +189,36 @@ void AudioControl::popFromPlaybackDataList(uint8_t *data, int &len)
     }
 }
 
+void AudioControl::popFromPlaybackDataList(uint8_t *data, int &len, bool flag)
+{
+    static quint8 size = 10;
+    if (flag)
+    {
+        QMutexLocker locker(&m_playbackDataMutex);
+        if (m_playbackDataList.size() < size)
+        {
+            len = -1;
+        }
+        else
+        {
+            qDebug() << "PlaybackDataList: " << m_playbackDataList.size();
+            len = 0;
+            for (int i = 0; i < size; ++i)
+            {
+                static pAudioPeriodData tmp;
+                tmp = m_playbackDataList.front();
+                m_playbackDataList.pop_front();
+                memcpy(data+len, tmp->data, tmp->dataLen);
+                len += tmp->dataLen;
+            }
+        }
+    }
+}
+
 void AudioControl::dealCaptureData()
 {
-    if (!m_captureDataList.empty())
+    //if (!m_captureDataList.empty())
+    if (false == m_captureDataList.isEmpty())
     {
         static uint8_t tmp[DATAMAXSIZE];
         static int len;
@@ -191,10 +226,10 @@ void AudioControl::dealCaptureData()
         popFromCaptureDataList(tmp, len);
         if (len > 0)
         {
-            //addToPlaybackDataList(tmp, len);
+            addToPlaybackDataList(tmp, len);
             //addToMixerData(1, tmp, len);
             //emit sendCaptureData(tmp, len);
-            encoder(tmp, len);
+            //encoder(tmp, len);
             //addToMixerData(2, tmp, len);
             //addToMixerData(3, tmp, len);
         }
@@ -214,7 +249,8 @@ void AudioControl::dealPlaybackData()
         for(SoundMixerMap::iterator iter = m_mixerData.begin(); iter != m_mixerData.end(); ++iter)
         {
             pAudioPeriodDataList tmpList = iter.value();
-            if (!tmpList->isEmpty())
+            //if (!tmpList->isEmpty())
+            if (false == tmpList->isEmpty())
             {
                 pAudioPeriodData tmpData = tmpList->front();
                 tmpList->pop_front();

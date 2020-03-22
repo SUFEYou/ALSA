@@ -1,6 +1,7 @@
 #include "AudioCapture.h"
 #include "AudioControl.h"
 #include <QDebug>
+#include <QTime>
 
 AudioCapture::AudioCapture()
              : m_stop(false)
@@ -22,7 +23,7 @@ void AudioCapture::run()
         if (rc == -EPIPE)
         {
               /* EPIPE means overrun */
-              //qDebug() << "overrun occurred";
+              qDebug() << QTime::currentTime().toString() << "overrun occurred";
               snd_pcm_prepare(m_handle);
         }
         else if (rc < 0)

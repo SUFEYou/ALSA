@@ -44,6 +44,7 @@ public:
     void popFromCaptureDataList(uint8_t *data, int &len);
     void addToPlaybackDataList(const uint8_t *data, const unsigned int len);
     void popFromPlaybackDataList(uint8_t *data, int &len);
+    void popFromPlaybackDataList(uint8_t *data, int &len, bool flag);
     void addToMixerData(const uint8_t id, uint8_t *data, const unsigned int len);
     void up();
     void down();

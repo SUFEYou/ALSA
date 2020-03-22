@@ -1,5 +1,6 @@
 #include "AudioPlayback.h"
 #include <QDebug>
+#include <QTime>
 
 AudioPlayback::AudioPlayback()
               : m_stop(false)
@@ -18,12 +19,14 @@ void AudioPlayback::audioPlaybackConnect()
 void AudioPlayback::run()
 {
     static uint8_t a[4096];
+    //static uint8_t a[40960];
     static int rc = 0;
     while (!m_stop)
     {
         //memset(a, 0, sizeof(a));
         AudioControl::getInstance()->popFromPlaybackDataList(a, rc);
         //popFromPlaybackDataList(a, rc);
+        //AudioControl::getInstance()->popFromPlaybackDataList(a, rc, true);
         if (rc <= 0)
         {
             //qDebug() << "Do Not Have Enough Data To Play!";
@@ -38,7 +41,7 @@ void AudioPlayback::run()
         if (rc == -EPIPE)
         {
               /* EPIPE means underrun */
-              //qDebug() << "underrun occurred";
+              qDebug() << QTime::currentTime().toString() << "underrun occurred";
               snd_pcm_prepare(m_handle);
         }
         else if (rc < 0)
@@ -50,6 +53,7 @@ void AudioPlayback::run()
             qDebug() << "short write, write " << rc << "frames";
         }
         //qDebug() << "write " << rc << "frames";
+        //msleep(10);
     }
     m_stop = false;
 }
@@ -83,6 +87,12 @@ bool AudioPlayback::audioPlaybackInit(QString& status)
     //设在采样周期,（最好是让系统自动设置，这一步可以省略）
     //snd_pcm_hw_params_set_period_size_near(m_handle, m_params, (snd_pcm_uframes_t*)&m_frameSize, 0);
     snd_pcm_hw_params_set_period_size(m_handle, m_params, m_frameSize, 0);
+
+//    unsigned long buffersize = 1024;
+//    snd_pcm_hw_params_set_buffer_size(m_handle, m_params, buffersize);
+//    snd_pcm_hw_params_get_buffer_size(m_params, &buffersize);
+//    qDebug() << "buffer_size: " << buffersize;
+
     //设置好的参数回写设备
     r = snd_pcm_hw_params(m_handle, m_params);
     if(r < 0)
@@ -119,7 +129,8 @@ void AudioPlayback::popFromPlaybackDataList(uint8_t *data, int &len)
 {
     //QMutexLocker locker(&m_playbackDataMutex);
     qDebug() << "########################PlaybackDataList length = " << m_playbackDataList.length();
-    if (!m_playbackDataList.empty())
+    //if (!m_playbackDataList.empty())
+    if (false == m_playbackDataList.isEmpty())
     {
         static pAudioPeriodData tmp;
         tmp = m_playbackDataList.front();
